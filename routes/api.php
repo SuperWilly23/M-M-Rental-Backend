@@ -1,9 +1,12 @@
 <?php
 
-use App\Http\Controllers\Api\RegisterController;
-use App\Http\Controllers\Api\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\ReservasiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +30,16 @@ Route::prefix('/user')->group(function () {
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth.jwt');
     Route::get('/current-user', [AuthController::class, 'me'])->middleware('auth.jwt');
 });
+
+Route::middleware('auth:api')->group(function () {
+    // Rute untuk UserController
+    Route::get('/user/profile', [UserController::class, 'getProfile']);
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
+
+    // Rute untuk ReservasiController
+    Route::get('/user/reservations', [ReservasiController::class, 'getReservations']);
+    Route::post('/reservations/{id}/review', [ReservasiController::class, 'giveReview']);
+});
+
+Route::get('/getuser', [UserController::class, 'getData']);
+
